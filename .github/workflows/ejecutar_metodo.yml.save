@@ -1,0 +1,31 @@
+name: Ejecutar Metodo de la Secante
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  run-java:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Descargar el codigo del repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar Java 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Compilar y Ejecutar el programa Java
+      run: |
+        javac MetodoSecante.java
+        java MetodoSecante > reporte_secante.txt
+
+    - name: Guardar el archivo generado en GitHub
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Auto-generar reporte_secante.txt mediante GitHub Actions"
+        file_pattern: "reporte_secante.txt"
